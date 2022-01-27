@@ -56,17 +56,32 @@ async function main() {
         const convertMarkdown = core.getInput("convert_markdown", { required: false })
         const ignoreCert = core.getInput("ignore_cert", { required: false })
         const priority = core.getInput("priority", { required: false })
+        // ---
+        const oauth_user = core.getInput("oauth_user")
+        const oauth_client_id = core.getInput("oauth_client_id")
+        const oauth_client_secret = core.getInput("oauth_client_secret")
+        const oauth_refresh_token = core.getInput("oauth_refresh_token")
 
         if (!username || !password) {
             core.warning("Username and password not specified. You should only do this if you are using a self-hosted runner to access an on-premise mail server.")
         }
+
+        if (!(oauth_user && oauth_client_id && oauth_client_secret && oauth_refresh_token)) {
+            core.warning("Some OAuth2 arguments were missing.")
+        }     
 
         const transport = nodemailer.createTransport({
             host: serverAddress,
             auth: username && password ? {
                 user: username,
                 pass: password
-            } : undefined,
+            } : (oauth_user && oauth_client_id && oauth_client_secret && oauth_refresh_token ? {
+                type: 'OAuth2',
+                user: oauth_user,
+                clientId: oauth_client_id,
+                clientSecret: oauth_client_secret,
+                refreshToken: oauth_refresh_token,
+            } : undefined),
             port: serverPort,
             secure: secure == "true" ? true : serverPort == "465",
             tls: ignoreCert == "true" ? {

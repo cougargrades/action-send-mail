@@ -1,4 +1,4 @@
-name: Send email
+name: Send email with OAuth2
 description: Send an email to multiple recipients
 author: cougargrades
 branding:
@@ -58,6 +58,19 @@ inputs:
     required: false
   priority:
     description: Set Priority level for the mail message to 'high', 'normal' (default) or 'low'
+    required: false
+  # https://nodemailer.com/smtp/oauth2/
+  oauth_user:
+    description: User email address (required)
+    required: false
+  oauth_client_id:
+    description: Is the registered client id of the application
+    required: false
+  oauth_client_secret:
+    description: Is the registered client secret of the application
+    required: false
+  oauth_refresh_token:
+    description: Is an optional refresh token. If it is provided then Nodemailer tries to generate a new access token if existing one expires or fails
     required: false
 runs:
   using: node12
