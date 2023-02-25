@@ -73,5 +73,5 @@ inputs:
     description: Is an optional refresh token. If it is provided then Nodemailer tries to generate a new access token if existing one expires or fails
     required: false
 runs:
-  using: node12
+  using: node16
   main: main.js
